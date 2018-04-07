@@ -9,8 +9,8 @@ By default, all top-level code is executed, and then execution is terminated. Wh
  */
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-let url = URL(string: "http://malcomjonesjr.com/nodes.json")
-let config = URLSessionConfiguration.background(withIdentifier: "json_downlooad_config")
+let url = URL(string: "http://malcomjonesjr.com/json/hairtypes.json")
+let config = URLSessionConfiguration.background(withIdentifier: "json_download_hairtypes")
 let session = URLSession(configuration: config)
 let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
     if( error != nil) {
@@ -19,19 +19,18 @@ let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
         if let urlContent = data {
             do {
                 
-                //AnyObject should be a dictionary
+                //jsonResult will be a JSON Object in the form of a dictionary [String: AnyObject] - AnyObject will be an array of Hair Types
                 let jsonResult = try JSONSerialization.jsonObject(with: urlContent, options:[]) as! [String: AnyObject]
                 
-                //Extract array of Node dictionaries
-                let jsonArray = jsonResult["Nodes"] as! [AnyObject]
+                //Extract array of Hair Types
+                let jsonArray = jsonResult["hair"] as! [AnyObject]
                 //print(jsonResult)
                 //print(jsonResult["Nodes"]!!)
                 
                 for i in jsonArray {
-                    let nodeID = i["NodeID"]
-                    let lat = i["Lat"]
-                    let long = i["Long"]
-                    print("The location of node \(nodeID!!) is \(lat!!), \(long!!)")
+                    let typeName = i["name"]
+                    let typeDesc = i["description"]
+                    print("The hair type \(String(describing: typeName)) is \(String(describing: typeDesc))\n")
                 }
             } catch {
                 print("JSON processing failed")
